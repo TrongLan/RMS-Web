@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>[Tên công ty] - Chi tiết tin tuyển dụng</title>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+		integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+		crossorigin="anonymous"></script>
+	<!-- Always remember to call the above files first before calling the bootstrap.min.js file -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+		integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+		crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+	<link rel="stylesheet" th:href="@{../../css/hiring_news_detail.css}">
+</head>
+
+<body>
+	<div class="nav-section">
+		<div th:replace="~{fragments/navigation :: navbar}"></div>
+	</div>
+
+	<section id="content-section">
+		<div th:if="${message}">
+			<p th:text="${message}"></p>
+		</div>
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="/"><i class="fa fa-home"></i></a></li>
+				<li class="breadcrumb-item"><a href="#"
+						th:text="'Cơ hội nghề nghiệp' + ' - ' + ${news.category.name}"></a>
+				</li>
+				<li class="breadcrumb-item"><a th:href="@{/hiring-news/list/{id}#news-list-container (id=${news.category.id})}">Danh
+						sách</a>
+				</li>
+				<li class="breadcrumb-item">Chi tiết</li>
+			</ol>
+		</nav>
+		<div id="news-container">
+			<div id="news-head">
+				<div class="news-data" id="news-title" th:text="${news.title}"></div>
+				<a th:if="${hasToken}" class="btn btn-outline-light" href="#apply-list-container">Danh sách ứng
+					tuyển</a>
+			</div>
+
+			<div id="news-content">
+				<div id="details">
+					<div class="news-data" id="description">
+						<div class="field-name">Mô tả công việc:</div>
+						<ul class="field-data">
+							<li th:each="line:${news.description.split('\\r?\\n')}" th:text="${line}"></li>
+						</ul>
+					</div>
+					<div class="news-data" id="requirements">
+						<div class="field-name">Yêu cầu ứng viên:</div>
+						<ul class="field-data">
+							<li th:each="line:${news.requirements.split('\\r?\\n')}" th:text="${line}"></li>
+						</ul>
+					</div>
+					<div class="news-data" id="benefits">
+						<div class="field-name">Chế độ phúc lợi:</div>
+						<ul class="field-data">
+							<li th:each="line:${news.benefits.split('\\r?\\n')}" th:text="${line}"></li>
+						</ul>
+					</div>
+				</div>
+				<div id="common">
+					<div class="news-data">
+						<span class="field-name">Hạn nộp hồ sơ:</span>
+						<span class="field-data" th:text="${news.dueDate}"></span>
+					</div>
+					<div class="news-data">
+						<span class="field-name">Số lượng tuyển:</span>
+						<span class="field-data" th:text="${news.quantity}"></span>
+					</div>
+					<div class="news-data">
+						<span class="field-name">Mức lương:</span>
+						<span class="field-data" th:if="${news.salaryMin == 0 || news.salaryMax == 0}">Thỏa thuận</span>
+						<span class="field-data" th:unless="${news.salaryMin == 0 || news.salaryMax == 0}"
+							th:text="${news.salaryMin} + ' VND - ' + ${news.salaryMax} + ' VND'"></span>
+					</div>
+				</div>
+			</div>
+			<div id="apply-btn">
+				<a class="btn btn-outline-light" th:if="${!hasToken}" href="#">Ứng tuyển</a>
+			</div>
+		</div>
+		<div id="apply-list-container" th:if="${hasToken}">
+			<div id="apply-list-h">
+				<div>Danh sách ứng tuyển</div>
+			</div>
+			<div>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th scope="col">Thao tác</th>
+							<th scope="col">STT</th>
+							<th scope="col">Họ đệm</th>
+							<th scope="col">Tên</th>
+							<th scope="col">Email</th>
+							<th scope="col">Số điện thoại</th>
+							<th scope="col">Thời gian gửi đơn</th>
+							<th scope="col">Trạng thái</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="apply, c:${news.applicantInformations}">
+							<td class="dropdown">
+								<div class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<i class="fa-solid fa-list"></i>
+								</div>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="#"><i class="fa-solid fa-download"></i> Tải tệp
+										CV</a>
+									<a th:if="${apply.status!=1}" class="dropdown-item" href="#"><i
+											class="fa-solid fa-check"></i> Đánh dấu là phù
+										hợp</a>
+									<a th:if="${apply.status==0}" class="dropdown-item" href="#"><i
+											class="fa-solid fa-xmark"></i> Đánh dấu là
+										không phù hợp</a>
+								</div>
+
+							</td>
+							<th scope="row" th:text="${c.count}"></th>
+							<td th:text="${apply.lastName}"></td>
+							<td th:text="${apply.firstName}"></td>
+							<td>
+								<a class="badge badge-secondary" th:text="${apply.email}"
+									th:href="@{'mailto:' + apply.email}"></a>
+							</td>
+							<td th:text="${apply.phoneNumber}"></td>
+							<td th:text="${apply.applyDate}"></td>
+							<td th:text="${statusMap.get(apply.status)}"></td>
+						</tr>
+					</tbody>
+
+				</table>
+			</div>
+		</div>
+	</section>
+
+
+	<div class="footer-section">
+		<div th:replace="~{fragments/footer :: footer}"></div>
+	</div>
+</body>
+
+</html>

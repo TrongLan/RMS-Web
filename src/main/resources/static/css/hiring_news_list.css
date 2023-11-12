@@ -1,0 +1,96 @@
+body {
+	background: linear-gradient(90deg, #0A2463 0%, #255E9A 53.63%, #3E92CC 100%);
+	font-family: 'Montserrat', sans-serif;
+}
+
+.nav-section {
+	background: #3E92CC;
+	line-height: normal;
+	text-transform: uppercase;
+}
+
+.footer-section {
+	background: #3E92CC;
+}
+
+.footer {
+	color: #FFFAFF;
+	padding: 20px 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: start;
+	text-align: justify;
+}
+
+.footer-div {
+	flex: 1;
+}
+
+.navbar .dropdown-menu-right {
+	right: 0;
+	left: auto;
+}
+
+.footer-list-link {
+	list-style-type: none;
+}
+
+.footer-list-link li a {
+	color: #FFFAFF;
+}
+
+#content-section {
+	padding: 20px 50px;
+	color: #FFFAFF;
+}
+
+.footer-div h6 {
+	text-transform: uppercase;
+}
+
+.breadcrumb {
+	background-color: transparent;
+}
+
+.breadcrumb li a {
+	color: #FFFAFF;
+}
+
+.breadcrumb-item + .breadcrumb-item::before{
+	content: ">";
+}
+
+.card {
+	background-color: transparent;
+	border: #FFFAFF 2px solid;
+	border-radius: 15px;
+}
+
+#list-head {
+	font-size: x-large;
+	text-transform: uppercase;
+	margin: 50px 0 30px 0;
+	text-align: center;
+}
+
+.card-container {
+	margin-bottom: 25px;
+}
+
+#cover-section {
+	text-align: center;
+}
+
+#cover-section div {
+	margin-top: 20px;
+	text-align: justify;
+}
+
+#cover-section img {
+	width: 75%;
+}
+
+#card-btn-div {
+	text-align: right;
+}
+

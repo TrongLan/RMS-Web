@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Navigation bar</title>
+</head>
+
+<body>
+	<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark">
+		<a class="navbar-brand" href="#">[Tên công ty]</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="/">Trang chủ</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Dự án</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Cơ hội nghề nghiệp
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a th:each="c:${categories}" th:text="${c.getName()}" class="dropdown-item"
+							th:href="@{/hiring-news/list/{id} (id=${c.id})}"></a>
+					</div>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Về chúng tôi</a>
+				</li>
+
+			</ul>
+		</div>
+		<div>
+			<a th:if="${!hasToken}" class="btn btn-outline-light" href="/auth/login">NTD Đăng nhập</a>
+			<div th:unless="${!hasToken}" class="dropdown btn btn-outline-light">
+				<div class="dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
+					aria-haspopup="true" aria-expanded="false">
+					<i id="user-icon" class="fa fa-user fa-lg" aria-hidden="true"></i>
+				</div>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+					<a class="dropdown-item" href="/hiring-news/edit">Đăng tin tuyển dụng</a>
+					<a class="dropdown-item" href="#">Kho lưu trữ tin</a>
+					<a class="dropdown-item" href="#">Đăng xuất</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+</body>
+
+
+</html>

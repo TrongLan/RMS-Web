@@ -1,0 +1,30 @@
+body {
+	background: linear-gradient(180deg, #0A2463 0%, #255E9A 53.63%, #3E92CC 100%);
+	font-family: "Montserrat", sans-serif;
+	color: #FFFAFF;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 100px;
+}
+
+.form-container {
+	color: #FFFAFF;
+	flex: 1;
+	padding: 50px 100px;
+	text-align: center;
+	background-color: #3E92CC;
+	border-radius: 20px;
+}
+
+svg {
+	flex: 1.5;
+}
+
+.error {
+	color: yellow;
+}
+
+#back-to-home {
+	color: #FFFAFF;
+}

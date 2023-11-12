@@ -1,21 +1,15 @@
-package com.dtl.rms_web.models;
+package com.dtl.rms_web.dtos;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@Builder
-public class HiringNews {
-	private String id;
+public class HiringNewsCreateDTO {
 	private String title;
 	private LocalDate dueDate;
 	private int quantity;
@@ -24,9 +18,5 @@ public class HiringNews {
 	private String description;
 	private String benefits;
 	private String requirements;
-	private int status;
-	private int isActive;
-	private Account account;
-	private Category category;
-	private List<ApplyInfo> applicantInformations;
+	private Long categoryId;
 }

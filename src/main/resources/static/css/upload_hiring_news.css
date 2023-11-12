@@ -1,0 +1,77 @@
+body {
+	background: linear-gradient(90deg, #0A2463 0%, #255E9A 53.63%, #3E92CC 100%);
+	font-family: 'Montserrat', sans-serif;
+}
+
+#nav-section {
+	background: #3E92CC;
+	line-height: normal;
+	text-transform: uppercase;
+}
+
+#footer-section {
+	background: #3E92CC;
+}
+
+.footer {
+	color: #FFFAFF;
+	padding: 20px 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: start;
+	text-align: justify;
+}
+
+.footer-div {
+	flex: 1;
+}
+
+.navbar .dropdown-menu-right {
+	right: 0;
+	left: auto;
+}
+
+.footer-list-link {
+	list-style-type: none;
+}
+
+.footer-list-link li a {
+	color: #FFFAFF;
+}
+
+#content-section {
+	padding: 20px 50px;
+	color: #FFFAFF;
+}
+
+.footer-div h6 {
+	text-transform: uppercase;
+}
+
+.breadcrumb {
+	background-color: transparent;
+}
+
+.breadcrumb li a {
+	color: #FFFAFF;
+}
+
+.breadcrumb-item + .breadcrumb-item::before{
+	content: ">";
+}
+
+#form-contain {
+	margin: auto;
+	background-color: #255E9A;
+	border-radius: 15px;
+	padding: 50px 100px;
+}
+
+.form-row {
+	margin-bottom: 20px;
+}
+
+.form-guide {
+	color: yellow;
+	font-size: small;
+}

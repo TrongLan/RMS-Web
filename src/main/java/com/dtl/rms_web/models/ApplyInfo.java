@@ -19,6 +19,7 @@ public class ApplyInfo {
 	private String lastName;
 	private String email;
 	private String phoneNumber;
+	private LocalDate applyDate;
 	private int status;
 	private String cvURL;
 	private HiringNews hiringNews;

@@ -11,9 +11,9 @@ public class RmsWebApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RmsWebApplication.class, args);
 	}
-	
-	@Bean
-	public RestTemplate getRestTemplate() {
+
+    @Bean
+    RestTemplate getRestTemplate() {
 		return new RestTemplate();
 	}
 
