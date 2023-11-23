@@ -56,7 +56,7 @@ body {
 	color: #FFFAFF;
 }
 
-.breadcrumb-item + .breadcrumb-item::before{
+.breadcrumb-item+.breadcrumb-item::before {
 	content: ">";
 }
 
@@ -64,7 +64,7 @@ body {
 	background-color: #255E9A;
 	margin: 10px auto;
 	padding: 20px 40px;
-	border-radius: 20px;
+	border-radius: 10px;
 }
 
 .news-data {
@@ -132,4 +132,27 @@ body {
 
 #news-head a {
 	flex: 0.05;
+}
+
+.modal-content {
+	background-color: #255E9A;
+	border-radius: 20px;
+	border: #FFFAFF solid 2px;
+}
+
+.modal-body {
+	background-color: #0A2463;
+	border-radius: 20px;
+}
+
+.modal-body form {
+	text-align: left;
+}
+
+.modal-body form button {
+	margin: 20px auto;
+}
+
+.modal-header {
+	border: transparent;
 }

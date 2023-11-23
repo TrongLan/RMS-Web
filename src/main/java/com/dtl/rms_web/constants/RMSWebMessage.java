@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum RMSWebMessage {
-	CREATED("Tạo mới thành công.");
+	CREATED("Đăng tải thành công.");
 
 	private final String content;
 }

@@ -28,21 +28,28 @@
 	</div>
 
 	<section id="content-section">
-		<div th:if="${message}">
-			<p th:text="${message}"></p>
-		</div>
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="/"><i class="fa fa-home"></i></a></li>
 				<li class="breadcrumb-item"><a href="#"
 						th:text="'Cơ hội nghề nghiệp' + ' - ' + ${news.category.name}"></a>
 				</li>
-				<li class="breadcrumb-item"><a th:href="@{/hiring-news/list/{id}#news-list-container (id=${news.category.id})}">Danh
+				<li class="breadcrumb-item"><a
+						th:href="@{/hiring-news/list/{id}#news-list-container (id=${news.category.id})}">Danh
 						sách</a>
 				</li>
 				<li class="breadcrumb-item">Chi tiết</li>
 			</ol>
 		</nav>
+		
+		<div th:if="${error_message}">
+			<div th:replace="~{fragments/toast :: alert}"></div>
+		</div>
+		
+		<div th:if="${success_message}">
+			<div th:replace="~{fragments/toast :: success}"></div>
+		</div>
+		
 		<div id="news-container">
 			<div id="news-head">
 				<div class="news-data" id="news-title" th:text="${news.title}"></div>
@@ -88,9 +95,63 @@
 					</div>
 				</div>
 			</div>
-			<div id="apply-btn">
-				<a class="btn btn-outline-light" th:if="${!hasToken}" href="#">Ứng tuyển</a>
+			<div th:if="${!hasToken}" id="apply-btn">
+				<!-- Button trigger modal -->
+				<button type="button" class="btn btn-outline-light" data-toggle="modal" data-target="#exampleModal">
+					Ứng tuyển
+				</button>
+
+				<!-- Modal -->
+				<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+					aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Điền thông tin ứng tuyển</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form th:action="@{/hiring-news/apply}" th:object="${dto}" method="post"
+									enctype="multipart/form-data">
+									<div class="form-row">
+										<div class="col-md-6 mb-3">
+											<label>Họ đệm</label>
+											<input th:field="*{lastName}" type="text" class="form-control"
+												placeholder="Nhập họ đệm" required>
+										</div>
+										<div class="col-md-6 mb-3">
+											<label>Tên</label>
+											<input th:field="*{firstName}" type="text" class="form-control"
+												placeholder="Nhập tên" required>
+										</div>
+									</div>
+									<div class="form-row">
+										<div class="col-md-6 mb-3">
+											<label>Email</label>
+											<input th:field="*{email}" type="text" placeholder="Nhập email"
+												class="form-control" required>
+										</div>
+										<div class="col-md-6 mb-3">
+											<label>Số điện thoại</label>
+											<input th:field="*{phoneNumber}" type="text" class="form-control"
+												placeholder="Nhập SĐT" required>
+										</div>
+										<div class="col-md-12 mb-3">
+											<label>File CV</label>
+											<input name="file" type="file" class="form-control" required>
+										</div>
+										<input hidden th:field="*{newsId}">
+										<button class="btn btn-outline-light" type="submit"><i
+												class="fa-solid fa-paper-plane"></i> Gửi hồ sơ </button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
+
 		</div>
 		<div id="apply-list-container" th:if="${hasToken}">
 			<div id="apply-list-h">

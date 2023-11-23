@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
 			responseBody = mapper.readValue(
 					badRequest.getResponseBodyAsString(),
 					ExceptionResponse.class);
-			attributes.addFlashAttribute("error_message", responseBody);
+			attributes.addFlashAttribute("error_message", responseBody.getMessage());
 			return "redirect:" + request.getHeader("Referer");
 		} catch (JsonProcessingException e) {
 			log.error(e.getMessage());

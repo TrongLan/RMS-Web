@@ -2,29 +2,35 @@ package com.dtl.rms_web.controllers;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dtl.rms_web.configuration.TokenHolder;
 import com.dtl.rms_web.constants.Endpoint;
 import com.dtl.rms_web.constants.RMSWebMessage;
+import com.dtl.rms_web.dtos.ApplyInfoCreateDTO;
 import com.dtl.rms_web.dtos.HiringNewsCreateDTO;
 import com.dtl.rms_web.models.Category;
 import com.dtl.rms_web.models.HiringNews;
@@ -64,7 +70,7 @@ public class HiringNewsController {
 				Endpoint.UPLOAD_HIRING_NEWS.getUrl(), entity, String.class);
 		HttpStatus code = (HttpStatus) responseEntity.getStatusCode();
 		if (code == HttpStatus.CREATED) {
-			attributes.addFlashAttribute("message",
+			attributes.addFlashAttribute("success_message",
 					RMSWebMessage.CREATED.getContent());
 			return "redirect:/hiring-news/detail/%s"
 					.formatted(responseEntity.getBody());
@@ -83,6 +89,8 @@ public class HiringNewsController {
 				Endpoint.HIRING_NEWS_DETAILS.getUrl().formatted(id),
 				HiringNews.class);
 		model.addAttribute("news", hiringNews);
+		model.addAttribute("dto",
+				ApplyInfoCreateDTO.builder().newsId(id).build());
 		HashMap<Integer, String> newsStatusMap = new HashMap<Integer, String>();
 		newsStatusMap.put(0, "Chờ đánh giá");
 		newsStatusMap.put(1, "Phù hợp");
@@ -119,6 +127,48 @@ public class HiringNewsController {
 				HiringNews[].class);
 		model.addAttribute("hiringNewsList", hiringNewsList);
 		return "hiring_news_list";
+	}
+
+	@PostMapping(path = "/apply")
+	public String jobApplying(@ModelAttribute ApplyInfoCreateDTO dto,
+			@RequestParam MultipartFile file, RedirectAttributes attributes) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+		ContentDisposition contentDisposition = ContentDisposition
+				.builder("form-data").name("file")
+				.filename(file.getOriginalFilename()).build();
+		body.add(HttpHeaders.CONTENT_DISPOSITION,
+				contentDisposition.toString());
+		body.add("file", file.getResource());
+		body.add("Content-Type", file.getContentType());
+		String dtoJson = String.format("""
+				{
+					"firstName": "%s",
+					"lastName": "%s",
+					"email": "%s",
+					"phoneNumber": "%s",
+					"newsId": "%s"
+				}
+				""", dto.getFirstName(), dto.getLastName(), dto.getEmail(),
+				dto.getPhoneNumber(), dto.getNewsId());
+		body.add("dto", dtoJson);
+
+		HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(
+				body, headers);
+		ResponseEntity<Object> postForEntity = restTemplate.postForEntity(
+				Endpoint.JOB_APPLY.getUrl(), entity, Object.class);
+		HttpStatusCode statusCode = postForEntity.getStatusCode();
+		if (statusCode == HttpStatus.CREATED) {
+			attributes.addFlashAttribute("success_message",
+					RMSWebMessage.CREATED.getContent());
+			return "redirect:/hiring-news/detail/%s".formatted(dto.getNewsId());
+		} else {
+			log.error("Calling API {} should return 201 not {}.",
+					Endpoint.JOB_APPLY.getUrl(), statusCode);
+			return "error/internal_server_error";
+		}
+
 	}
 
 }
