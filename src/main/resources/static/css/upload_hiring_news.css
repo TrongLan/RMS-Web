@@ -56,7 +56,7 @@ body {
 	color: #FFFAFF;
 }
 
-.breadcrumb-item + .breadcrumb-item::before{
+.breadcrumb-item+.breadcrumb-item::before {
 	content: ">";
 }
 
@@ -74,4 +74,10 @@ body {
 .form-guide {
 	color: yellow;
 	font-size: small;
+}
+
+.ck-editor__editable[role="textbox"] {
+	/* editing area */
+	min-height: 200px;
+	color: black;
 }

@@ -1,5 +1,7 @@
 package com.dtl.rms_web.controllers;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -31,10 +34,14 @@ import com.dtl.rms_web.configuration.TokenHolder;
 import com.dtl.rms_web.constants.Endpoint;
 import com.dtl.rms_web.constants.RMSWebMessage;
 import com.dtl.rms_web.dtos.ApplyInfoCreateDTO;
+import com.dtl.rms_web.dtos.FileInfoDTO;
 import com.dtl.rms_web.dtos.HiringNewsCreateDTO;
 import com.dtl.rms_web.models.Category;
 import com.dtl.rms_web.models.HiringNews;
 
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -167,6 +174,59 @@ public class HiringNewsController {
 			log.error("Calling API {} should return 201 not {}.",
 					Endpoint.JOB_APPLY.getUrl(), statusCode);
 			return "error/internal_server_error";
+		}
+
+	}
+
+	@GetMapping("/approve/{id}/{status}")
+	public String approveApplyInfo(@PathVariable String id,
+			@PathVariable Integer status, RedirectAttributes attributes,
+			HttpServletRequest request) {
+		// Prepare headers
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization",
+				"Bearer %s".formatted(tokenHolder.getToken()));
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+
+		// Send the GET request
+		ResponseEntity<String> responseEntity = restTemplate.exchange(
+				Endpoint.APPROVE_APPLY_INFO.getUrl().formatted(id, status),
+				HttpMethod.GET, entity, String.class);
+		HttpStatusCode statusCode = responseEntity.getStatusCode();
+		if (statusCode == HttpStatus.OK) {
+			attributes.addFlashAttribute("success_message",
+					RMSWebMessage.APPROVED_SUCCESS.getContent());
+			return "redirect:" + request.getHeader("Referer");
+		} else {
+			log.error("Calling API {} should return 200 not {}.",
+					Endpoint.JOB_APPLY.getUrl(), statusCode);
+			return "error/internal_server_error";
+		}
+	}
+
+	@GetMapping("/download-cv/{id}")
+	public void downloadFile(@PathVariable String id,
+			HttpServletResponse response) throws URISyntaxException {
+		// Prepare headers
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization",
+				"Bearer %s".formatted(tokenHolder.getToken()));
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<FileInfoDTO> responseEntity = restTemplate.exchange(
+				Endpoint.DOWNLOAD_FILE_CV.getUrl().formatted(id),
+				HttpMethod.GET, entity, FileInfoDTO.class);
+		FileInfoDTO body = responseEntity.getBody();
+		response.setContentType("application/octet-stream");
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=" + body.getName();
+		response.setHeader(headerKey, headerValue);
+
+		try {
+			ServletOutputStream outputStream = response.getOutputStream();
+			outputStream.write(body.getContent());
+			outputStream.close();
+		} catch (IOException e) {
+			log.error(e.getMessage());
 		}
 
 	}

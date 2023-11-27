@@ -19,6 +19,8 @@
 		crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
+	<script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
+
 	<link rel="stylesheet" th:href="@{../../css/upload_hiring_news.css}">
 </head>
 
@@ -90,23 +92,20 @@
 				<div class="form-row">
 					<div class="form-outline col-md-12">
 						<label class="form-label">Mô tả công việc</label>
-						<textarea th:field="*{description}" class="form-control" rows="5"
-							placeholder="Nhập xuống dòng để phân chia thành các ý"></textarea>
+						<textarea id="editor1" th:field="*{description}" class="form-control" rows="8"></textarea>
 					</div>
 				</div>
 				<div class="form-row">
 					<div class="form-outline col-md-12">
 						<label class="form-label">Yêu cầu ứng viên</label>
-						<textarea th:field="*{requirements}" class="form-control" rows="5"
-							placeholder="Nhập xuống dòng để phân chia thành các ý"></textarea>
+						<textarea id="editor2" th:field="*{requirements}" class="form-control" rows="8"></textarea>
 					</div>
 				</div>
 
 				<div class="form-row">
 					<div class="form-outline col-md-12">
 						<label class="form-label" for="form4Example3">Chế độ đãi ngộ</label>
-						<textarea th:field="*{benefits}" class="form-control" id="form4Example3" rows="5"
-							placeholder="Nhập xuống dòng để phân chia thành các ý"></textarea>
+						<textarea id="editor3" th:field="*{benefits}" class="form-control" rows="8"></textarea>
 					</div>
 				</div>
 
@@ -127,5 +126,28 @@
 	</section>
 
 </body>
+
+<script>
+	ClassicEditor
+		.create(document.querySelector("#editor1"))
+		.catch(error => {
+			console.error(error);
+		});
+</script>
+<script>
+	ClassicEditor
+		.create(document.querySelector("#editor2"))
+		.catch(error => {
+			console.error(error);
+		});
+</script>
+<script>
+	ClassicEditor
+		.create(document.querySelector("#editor3"))
+		.catch(error => {
+			console.error(error);
+		});
+</script>
+
 
 </html>

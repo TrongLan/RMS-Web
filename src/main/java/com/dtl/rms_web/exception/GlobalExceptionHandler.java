@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException.BadRequest;
 import org.springframework.web.client.HttpClientErrorException.Forbidden;
+import org.springframework.web.client.HttpClientErrorException.NotFound;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -29,7 +30,8 @@ public class GlobalExceptionHandler {
 			responseBody = mapper.readValue(
 					badRequest.getResponseBodyAsString(),
 					ExceptionResponse.class);
-			attributes.addFlashAttribute("error_message", responseBody.getMessage());
+			attributes.addFlashAttribute("error_message",
+					responseBody.getMessage());
 			return "redirect:" + request.getHeader("Referer");
 		} catch (JsonProcessingException e) {
 			log.error(e.getMessage());
@@ -49,5 +51,11 @@ public class GlobalExceptionHandler {
 			InternalServerError internalServerError) {
 		log.error(internalServerError.getMessage());
 		return "error/internal_server_error";
+	}
+
+	@ExceptionHandler(value = {NotFound.class})
+	public String handlingNotFound(NotFound notFound) {
+		log.error(notFound.getMessage());
+		return "error/not_found";
 	}
 }

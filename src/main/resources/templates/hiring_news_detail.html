@@ -41,15 +41,15 @@
 				<li class="breadcrumb-item">Chi tiết</li>
 			</ol>
 		</nav>
-		
+
 		<div th:if="${error_message}">
 			<div th:replace="~{fragments/toast :: alert}"></div>
 		</div>
-		
+
 		<div th:if="${success_message}">
 			<div th:replace="~{fragments/toast :: success}"></div>
 		</div>
-		
+
 		<div id="news-container">
 			<div id="news-head">
 				<div class="news-data" id="news-title" th:text="${news.title}"></div>
@@ -61,21 +61,15 @@
 				<div id="details">
 					<div class="news-data" id="description">
 						<div class="field-name">Mô tả công việc:</div>
-						<ul class="field-data">
-							<li th:each="line:${news.description.split('\\r?\\n')}" th:text="${line}"></li>
-						</ul>
+						<div th:utext="${news.description}"></div>
 					</div>
 					<div class="news-data" id="requirements">
 						<div class="field-name">Yêu cầu ứng viên:</div>
-						<ul class="field-data">
-							<li th:each="line:${news.requirements.split('\\r?\\n')}" th:text="${line}"></li>
-						</ul>
+						<div th:utext="${news.requirements}"></div>
 					</div>
 					<div class="news-data" id="benefits">
 						<div class="field-name">Chế độ phúc lợi:</div>
-						<ul class="field-data">
-							<li th:each="line:${news.benefits.split('\\r?\\n')}" th:text="${line}"></li>
-						</ul>
+						<div th:utext="${news.benefits}"></div>
 					</div>
 				</div>
 				<div id="common">
@@ -157,7 +151,7 @@
 			<div id="apply-list-h">
 				<div>Danh sách ứng tuyển</div>
 			</div>
-			<div>
+			<div th:if="${!news.applicantInformations.isEmpty()}">
 				<table class="table table-hover">
 					<thead>
 						<tr>
@@ -179,12 +173,16 @@
 									<i class="fa-solid fa-list"></i>
 								</div>
 								<div class="dropdown-menu">
-									<a class="dropdown-item" href="#"><i class="fa-solid fa-download"></i> Tải tệp
+									<a class="dropdown-item"
+										th:href="@{/hiring-news/download-cv/{id} (id=${apply.id})}"><i class=" fa-solid
+										fa-download"></i> Tải tệp
 										CV</a>
-									<a th:if="${apply.status!=1}" class="dropdown-item" href="#"><i
+									<a th:if="${apply.status!=1}" class="dropdown-item"
+										th:href="@{/hiring-news/approve/{id}/1 (id=${apply.id})}"><i
 											class="fa-solid fa-check"></i> Đánh dấu là phù
 										hợp</a>
-									<a th:if="${apply.status==0}" class="dropdown-item" href="#"><i
+									<a th:if="${apply.status==0}" class="dropdown-item"
+										th:href="@{/hiring-news/approve/{id}/2 (id=${apply.id})}"><i
 											class="fa-solid fa-xmark"></i> Đánh dấu là
 										không phù hợp</a>
 								</div>
@@ -204,6 +202,9 @@
 					</tbody>
 
 				</table>
+			</div>
+			<div id="empty-list" th:unless="${!news.applicantInformations.isEmpty()}">
+				<img alt="Icon danh sách trống" th:src="@{../../css/images/empty-box.png}">
 			</div>
 		</div>
 	</section>

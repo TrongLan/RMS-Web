@@ -73,6 +73,8 @@ body {
 
 .field-name {
 	font-weight: bolder;
+	font-size: larger;
+	text-decoration: underline;
 }
 
 .field-data {
@@ -155,4 +157,9 @@ body {
 
 .modal-header {
 	border: transparent;
+}
+
+#empty-list {
+	text-align: center;
+	margin-bottom: 50px;
 }
