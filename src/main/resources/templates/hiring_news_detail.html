@@ -75,7 +75,7 @@
 				<div id="common">
 					<div class="news-data">
 						<span class="field-name">Hạn nộp hồ sơ:</span>
-						<span class="field-data" th:text="${news.dueDate}"></span>
+						<span class="field-data" th:text="${#temporals.format(news.dueDate, 'dd-MM-yyyy')}"></span>
 					</div>
 					<div class="news-data">
 						<span class="field-name">Số lượng tuyển:</span>
@@ -166,7 +166,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="apply, c:${news.applicantInformations}">
+						<tr th:each="apply, c:${applyPage.content}">
 							<td class="dropdown">
 								<div class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
 									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -196,12 +196,25 @@
 									th:href="@{'mailto:' + apply.email}"></a>
 							</td>
 							<td th:text="${apply.phoneNumber}"></td>
-							<td th:text="${apply.applyDate}"></td>
+							<td th:text="${#temporals.format(apply.applyDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
 							<td th:text="${statusMap.get(apply.status)}"></td>
 						</tr>
 					</tbody>
 
 				</table>
+				<div class="page-nav">
+					<div class="page-nav-item">
+						<a th:if="${!applyPage.first}" class="btn btn-primary"
+							th:href="@{/hiring-news/detail/{id}?page={p}#apply-list-container (id=${news.id}, p=${applyPage.number-1})}">&laquo;</a>
+					</div>
+					<div th:text="'Trang ' + ${applyPage.number + 1} + '/' + ${applyPage.totalPages}"
+						class="page-nav-item">
+					</div>
+					<div class="page-nav-item">
+						<a th:if="${!applyPage.last}" class="btn btn-primary"
+							th:href="@{/hiring-news/detail/{id}?page={p}#apply-list-container (id=${news.id}, p=${applyPage.number+1})}">&raquo;</a>
+					</div>
+				</div>
 			</div>
 			<div id="empty-list" th:unless="${!news.applicantInformations.isEmpty()}">
 				<img alt="Icon danh sách trống" th:src="@{../../css/images/empty-box.png}">

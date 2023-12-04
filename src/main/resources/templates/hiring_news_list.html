@@ -64,12 +64,17 @@
 
 		<div class="list-container" id="news-list-container">
 			<div id="list-head">Job openings</div>
-			<div class="row">
+			<div id="empty-list" th:if="${hiringNewsList.length==0}">
+				<img alt="Icon danh sách trống" th:src="@{../../css/images/empty-box.png}">
+			</div>
+			<div th:unless="${hiringNewsList.length==0}" class="row">
 				<div th:each="news:${hiringNewsList}" class="card-container col-sm-6">
 					<div class="card">
 						<div class="card-body">
 							<h5 th:text="${news.title}" class="card-title"></h5>
-							<div class="card-text" th:text="${'Hạn nộp hồ sơ: ' + news.dueDate}"></div>
+							<div class="card-text"
+								th:text="${'Hạn nộp hồ sơ: ' + #temporals.format(news.dueDate, 'dd-MM-yyyy')}">
+							</div>
 							<br>
 							<div id="card-btn-div">
 								<a th:href="@{/hiring-news/detail/{id} (id=${news.id})}"

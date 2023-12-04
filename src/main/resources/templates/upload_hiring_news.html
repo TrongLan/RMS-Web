@@ -37,6 +37,14 @@
 			</ol>
 		</nav>
 
+		<div th:if="${error_message}">
+			<div th:replace="~{fragments/toast :: alert}"></div>
+		</div>
+
+		<div th:if="${success_message}">
+			<div th:replace="~{fragments/toast :: success}"></div>
+		</div>
+
 		<div id="form-contain">
 			<form th:action="@{/hiring-news/upload}" th:object="${hiring_news}" method="post">
 				<div class="form-row">

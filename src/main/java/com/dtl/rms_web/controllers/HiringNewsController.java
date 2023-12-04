@@ -5,8 +5,11 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -30,14 +33,17 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dtl.rms_web.configuration.RestResponsePage;
 import com.dtl.rms_web.configuration.TokenHolder;
 import com.dtl.rms_web.constants.Endpoint;
 import com.dtl.rms_web.constants.RMSWebMessage;
 import com.dtl.rms_web.dtos.ApplyInfoCreateDTO;
 import com.dtl.rms_web.dtos.FileInfoDTO;
 import com.dtl.rms_web.dtos.HiringNewsCreateDTO;
+import com.dtl.rms_web.models.ApplyInfo;
 import com.dtl.rms_web.models.Category;
 import com.dtl.rms_web.models.HiringNews;
+import org.springframework.data.domain.Page;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
@@ -89,12 +95,34 @@ public class HiringNewsController {
 	}
 
 	@GetMapping("/detail/{id}")
-	public String openNewsDetailPage(Model model, @PathVariable String id) {
-		hasToken(model);
+	public String openNewsDetailPage(Model model, @PathVariable String id,
+			@RequestParam(defaultValue = "0") Integer page) {
+		boolean hasToken = hasToken(model);
 		addCategories(model);
 		HiringNews hiringNews = restTemplate.getForObject(
 				Endpoint.HIRING_NEWS_DETAILS.getUrl().formatted(id),
 				HiringNews.class);
+
+		if (hasToken) {
+			StringBuilder builder = new StringBuilder(
+					Endpoint.APLY_INFO_LIST.getUrl().formatted(id));
+			if (!Objects.isNull(page)) {
+				builder.append("?");
+				builder.append("pageNumber=%s".formatted(page));
+			}
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization",
+					"Bearer %s".formatted(tokenHolder.getToken()));
+			HttpEntity<HiringNewsCreateDTO> entity = new HttpEntity<>(headers);
+			ParameterizedTypeReference<RestResponsePage<ApplyInfo>> reference = new ParameterizedTypeReference<>() {
+			};
+			ResponseEntity<RestResponsePage<ApplyInfo>> applyInfoPage = restTemplate
+					.exchange(builder.toString(), HttpMethod.GET, entity,
+							reference);
+
+			model.addAttribute("applyPage", applyInfoPage.getBody());
+		}
+
 		model.addAttribute("news", hiringNews);
 		model.addAttribute("dto",
 				ApplyInfoCreateDTO.builder().newsId(id).build());
@@ -112,12 +140,13 @@ public class HiringNewsController {
 		model.addAttribute("categories", categories);
 	}
 
-	private void hasToken(Model model) {
+	private boolean hasToken(Model model) {
 		if (!StringUtils.hasText(tokenHolder.getToken())) {
 			model.addAttribute("hasToken", false);
 		} else {
 			model.addAttribute("hasToken", true);
 		}
+		return StringUtils.hasText(tokenHolder.getToken());
 	}
 
 	@GetMapping("/list/{id}")

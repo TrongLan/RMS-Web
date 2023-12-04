@@ -13,6 +13,7 @@ public enum Endpoint {
 	LIST_CATEGORY("http://localhost:8080/api/common/categories"),
 	LIST_HIRING_NEWS_IN_CATEGORY("http://localhost:8080/api/common/hiring-news/list/%d"),
 	DOWNLOAD_FILE_CV("http://localhost:8080/api/hr/download/%s"),
-	HIRING_NEWS_DETAILS("http://localhost:8080/api/common/hiring-news/details/%s");
+	HIRING_NEWS_DETAILS("http://localhost:8080/api/common/hiring-news/details/%s"),
+	APLY_INFO_LIST("http://localhost:8080/api/hr/apply-info/list/%s");
 	private final String url;
 }

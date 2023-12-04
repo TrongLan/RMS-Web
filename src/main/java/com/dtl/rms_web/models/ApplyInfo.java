@@ -1,6 +1,6 @@
 package com.dtl.rms_web.models;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +19,7 @@ public class ApplyInfo {
 	private String lastName;
 	private String email;
 	private String phoneNumber;
-	private LocalDate applyDate;
+	private LocalDateTime applyDate;
 	private int status;
 	private String cvURL;
 	private HiringNews hiringNews;
