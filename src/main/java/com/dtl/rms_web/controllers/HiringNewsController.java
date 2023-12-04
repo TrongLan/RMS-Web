@@ -105,7 +105,7 @@ public class HiringNewsController {
 
 		if (hasToken) {
 			StringBuilder builder = new StringBuilder(
-					Endpoint.APLY_INFO_LIST.getUrl().formatted(id));
+					Endpoint.APPLY_INFO_LIST.getUrl().formatted(id));
 			if (!Objects.isNull(page)) {
 				builder.append("?");
 				builder.append("pageNumber=%s".formatted(page));
@@ -119,8 +119,12 @@ public class HiringNewsController {
 			ResponseEntity<RestResponsePage<ApplyInfo>> applyInfoPage = restTemplate
 					.exchange(builder.toString(), HttpMethod.GET, entity,
 							reference);
+			ResponseEntity<Object> dashboard = restTemplate.exchange(
+					Endpoint.APPLY_INFO_DASHBOARD.getUrl().formatted(id),
+					HttpMethod.GET, entity, Object.class);
 
 			model.addAttribute("applyPage", applyInfoPage.getBody());
+			model.addAttribute("dashboard", dashboard.getBody());
 		}
 
 		model.addAttribute("news", hiringNews);

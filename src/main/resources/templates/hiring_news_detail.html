@@ -152,6 +152,16 @@
 				<div>Danh sách ứng tuyển</div>
 			</div>
 			<div th:if="${!news.applicantInformations.isEmpty()}">
+				<div id="dashboard-container">
+					<div class="dashboard-data"><strong>Tổng số: </strong><span th:text="${dashboard.total}"></span>
+					</div>
+					<div class="dashboard-data"><strong>Chờ đánh giá: </strong><span
+							th:text="${dashboard.pending}"></span></div>
+					<div class="dashboard-data"><strong>Phù hợp: </strong><span th:text="${dashboard.suitable}"></span>
+					</div>
+					<div class="dashboard-data"><strong>Chưa phù hợp: </strong><span
+							th:text="${dashboard.notSuitable}"></span></div>
+				</div>
 				<table class="table table-hover">
 					<thead>
 						<tr>
